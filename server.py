@@ -78,9 +78,10 @@ def add_number():
         try:
             listingId = int(request.form['listingId'])
             encryptedPhoneNumber = request.form['encryptedPhoneNumber']
+            encryptedName = request.form['encryptedName']
             timestamp = int(time.time()*1000);
-            insertRow = (listingId,encryptedPhoneNumber,timestamp)
-            c.execute("INSERT INTO users VALUES (?,?,?)", insertRow)
+            insertRow = (listingId,encryptedPhoneNumber,timestamp,encryptedName)
+            c.execute("INSERT INTO users VALUES (?,?,?,?)", insertRow)
             con.commit()
             return jsonify("success")
         except Exception as e:
@@ -93,7 +94,7 @@ def get_listing():
         c = con.cursor()
         try:
             listingId = request.form['listingId']
-            results = c.execute("SELECT encryptedNum FROM users WHERE ? = listing", listingId).fetchall()
+            results = c.execute("SELECT encryptedNum, name FROM users WHERE ? = listing", listingId).fetchall()
             return jsonify(results)
         except:
             return jsonify("error")
@@ -116,7 +117,7 @@ def get_listing_after_time():
         try:
             listingId = request.form['listingId']
             timestamp = request.form['timestamp']
-            results = c.execute("SELECT encryptedNum FROM users WHERE ? = listing and ? < timestamp", (listingId, timestamp)).fetchall()
+            results = c.execute("SELECT encryptedNum, name FROM users WHERE ? = listing and ? < timestamp", (listingId, timestamp)).fetchall()
             return jsonify(results)
         except Exception as e:
             print(e)
@@ -130,7 +131,7 @@ def batch_get_listing_after_time():
             updates = json.JSONDecoder().decode(request.form['updates'])
             results = {}
             for listingId, timestamp in updates.items():
-                results[listingId] = c.execute("SELECT encryptedNum FROM users WHERE ? = listing and ? < timestamp", (listingId, timestamp)).fetchall()
+                results[listingId] = c.execute("SELECT encryptedNum, name FROM users WHERE ? = listing and ? < timestamp", (listingId, timestamp)).fetchall()
             return jsonify(results)
         except Exception as e:
             print(e)
