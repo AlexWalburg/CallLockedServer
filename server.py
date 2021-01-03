@@ -39,12 +39,17 @@ def create_listing():
             con.rollback()
             return jsonify("error")
 
-@app.route('/getPublicListings',methods=['post'])
-def get_public_listings():
+@app.route('/searchPublicListings',methods=['post'])
+def search_public_listings():
     with sqlite3.connect(db) as con:
         c = con.cursor()
-        a = c.execute("SELECT listing, name, privkey FROM listings WHERE privkey IS NOT NULL").fetchall()
-        return jsonify(a)
+        try:
+            searchText = request.form['searchText']
+            a = c.execute("SELECT listing, name, pubkey FROM listings WHERE pubkey <> '' AND name LIKE '%' || ? || '%'",(searchText,)).fetchall()
+            return jsonify(a)
+        except Exception as e:
+            print(e)
+            return jsonify("error")
 
 @app.route('/publicizeListing', methods=['post'])
 def publicize_listing():
