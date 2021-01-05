@@ -109,10 +109,11 @@ def get_listing_name():
     with sqlite3.connect(db) as con:
         c = con.cursor()
         try:
-            listingId = request.form['listingId']
-            result = c.execute("SELECT name FROM listings WHERE ? = listing", listingId).fetchone()
+            listingId = int(request.form['listingId'])
+            result = c.execute("SELECT name FROM listings WHERE ? = listing", (listingId,)).fetchone()
             return jsonify(result)
-        except:
+        except Exception as e:
+            throw(e)
             return jsonify("error")
 
 @app.route('/getListingAfterTime',methods=['post'])
