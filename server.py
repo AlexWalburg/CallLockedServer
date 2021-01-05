@@ -113,7 +113,6 @@ def get_listing_name():
             result = c.execute("SELECT name FROM listings WHERE ? = listing", (listingId,)).fetchone()
             return jsonify(result)
         except Exception as e:
-            throw(e)
             return jsonify("error")
 
 @app.route('/getListingAfterTime',methods=['post'])
