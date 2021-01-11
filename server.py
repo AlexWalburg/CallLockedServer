@@ -111,9 +111,10 @@ def get_listing_name():
         c = con.cursor()
         try:
             listingId = int(request.form['listingId'])
-            result = c.execute("SELECT name, key FROM listings WHERE ? = listing", (listingId,)).fetchone()
+            result = c.execute("SELECT name, privkey FROM listings WHERE ? = listing", (listingId,)).fetchone()
             return jsonify(result)
         except Exception as e:
+            print(e)
             return jsonify("error")
 
 @app.route('/getListingAfterTime',methods=['post'])
