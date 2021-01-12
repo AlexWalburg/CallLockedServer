@@ -13,7 +13,7 @@ import json
 db = "phones.db"
 app = Flask("CallLock")
 
-@app.route('/')
+@app.route('/', methods=['post', 'get'])
 def default_connection():
     return "server is up"
 
